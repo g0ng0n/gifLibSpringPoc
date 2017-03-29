@@ -50,7 +50,7 @@
             collection of the model map. Each object in the loop
             should be named 'category'
         -->
-        <div class="col s12 l4">
+        <div th:each="category : ${categories}" class="col s12 l4">
             <div class="card">
                 <div class="card-content">
                     <div class="card-title">
@@ -63,7 +63,7 @@
                             coming from the 'name' field of the 'category' object
                             in the model map
                         -->
-                        <a>Category Name</a>
+                        <a th:href="@{'/category/' + ${category.id}}" th:text="${category.name}">Category Name</a>
                     </div>
                 </div>
             </div>
