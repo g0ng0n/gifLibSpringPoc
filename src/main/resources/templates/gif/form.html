@@ -1,30 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="layout :: head('favorites')"></head>
+<head th:replace="layout :: head('upload')"></head>
 <body>
 <div th:replace="layout :: nav"></div>
-<div th:replace="layout :: searchbar"></div>
 <div th:replace="layout :: flash"></div>
-<div class="row user-meta">
-    <div class="col s3 l12">
-        <img class="circle" th:src="@{/images/me.jpg}" alt="avatar" />
-    </div>
-    <div class="col s9= l12">
-        <h2 th:text="${username}">Jane Doe</h2>
-        <div class="meta" th:text="|${#lists.size(gifs)} Favorites|"></div>
-    </div>
-</div>
-<div class="gifs container">
-    <div class="divider"></div>
+
+<div class="container upload">
+
     <div class="row">
-        <div th:each="gif : ${gifs}" class="col s12 l4">
-            <a th:href="@{|/gifs/${gif.id}|}">
-                <img th:src="@{|/gifs/${gif.id}.gif|}" />
-                <a href="#" th:class="(${gif.favorite}? 'un' : '') + 'mark favorite'"></a>
-            </a>
+        <div class="col s12">
+            <h2 th:text="${heading}">Upload</h2>
+            <div class="subtitle">Upload and share your GIFs with friends and family on Facebook, Twitter, and
+                everywhere else.
+            </div>
         </div>
     </div>
+
+    <div class="divider"></div>
+    <form th:action="@{${action}}" method="post" th:object="${gif}" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="row">
+            <div class="col s12 l8">
+                <div class="file-wrapper">
+                    <input type="file" id="file" name="file"/>
+                    <span class="placeholder" data-placeholder="Choose an image...">Choose an image...</span>
+                    <label for="file" class="button">Browse</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 l8">
+                <input type="text" th:field="*{description}" placeholder="Description"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12 l8">
+                <select th:field="*{category.id}" class="cs-select cs-skin-border">
+                    <option value="" disabled="disabled">Select a category</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                            th:style="|color:${cat.colorCode}|">Technology
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <button th:text="${submit}" type="submit" class="button">Upload</button>
+                <a href="javascript:window.location = document.referrer;" class="button">Cancel</a>
+            </div>
+        </div>
+
+    </form>
+
 </div>
+
 <div th:replace="layout :: scripts"></div>
+
 </body>
+
 </html>
