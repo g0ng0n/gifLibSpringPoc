@@ -1,40 +1,71 @@
 package com.test.project.giflib.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Created by gonzalo.gisbert on 27/03/17.
+ * Created by g0ng0n
  */
+@Entity
 public class Gif {
 
-    private String name;
-    private LocalDate dateUploaded;
-    private String username;
-    private int categoryId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+
+    @Lob
+    private byte[] bytes;
+    private String description;
+
+    @ManyToOne
+    private Category category;
+    private LocalDateTime dateUploaded = LocalDateTime.now();
+    private String username = "You";
     private boolean favorite;
+    private String hash;
 
-    public Gif(String name, int categoryId, LocalDate dateUploaded, String username, boolean favorite) {
-        this.name = name;
-        this.categoryId = categoryId;
-        this.dateUploaded = dateUploaded;
-        this.username = username;
-        this.favorite = favorite;
+    public Gif(){}
+
+    public Long getId() {
+        return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public byte[] getBytes() {
+        return bytes;
     }
 
-    public LocalDate getDateUploaded() {
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public LocalDateTime getDateUploaded() {
         return dateUploaded;
     }
 
-    public void setDateUploaded(LocalDate dateUploaded) {
+    public void setDateUploaded(LocalDateTime dateUploaded) {
         this.dateUploaded = dateUploaded;
     }
 
@@ -54,11 +85,11 @@ public class Gif {
         this.favorite = favorite;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public String getHash() {
+        return hash;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 }

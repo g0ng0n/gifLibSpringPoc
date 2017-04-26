@@ -1,24 +1,33 @@
 package com.test.project.giflib.model;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by gonzalo.gisbert on 28/03/17.
+ * Created by g0ng0n
  */
+@Entity
 public class Category {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
 
-    public Category(int id, String name) {
+    private String colorCode;
 
-        this.id = id;
-        this.name = name;
-    }
 
-    public int getId() {
+
+    @OneToMany(mappedBy = "category")
+    private List<Gif> gifs = new ArrayList<>();
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -30,6 +39,22 @@ public class Category {
         this.name = name;
     }
 
+    public String getColorCode() {
+        return colorCode;
+    }
+
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
+    }
+
+    public List<Gif> getGifs() {
+        return gifs;
+    }
+
+    public void setGifs(List<Gif> gifs) {
+        this.gifs = gifs;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,14 +62,18 @@ public class Category {
 
         Category category = (Category) o;
 
-        if (id != category.id) return false;
-        return name != null ? name.equals(category.name) : category.name == null;
+        if (id != null ? !id.equals(category.id) : category.id != null) return false;
+        if (name != null ? !name.equals(category.name) : category.name != null) return false;
+        if (colorCode != null ? !colorCode.equals(category.colorCode) : category.colorCode != null) return false;
+        return gifs != null ? gifs.equals(category.gifs) : category.gifs == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (colorCode != null ? colorCode.hashCode() : 0);
+        result = 31 * result + (gifs != null ? gifs.hashCode() : 0);
         return result;
     }
 }

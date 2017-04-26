@@ -1,6 +1,5 @@
 package com.test.project.giflib.web.controller;
 
-import com.test.project.giflib.data.GifRepository;
 import com.test.project.giflib.model.Gif;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,20 +7,19 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by gonzalo.gisbert on 27/03/17.
+ * Created by g0ng0n
  */
 @Controller
 public class GifController {
 
-    @Autowired
-    private GifRepository gifRepository;
 
     @RequestMapping(value = "/")
     public String listGifs(ModelMap modelMap){
-        List<Gif> list = gifRepository.getAllGifs();
+        List<Gif> list = new ArrayList<>();
         modelMap.put("gifs", list);
         return "home";
     }
@@ -30,16 +28,9 @@ public class GifController {
     @RequestMapping("/gif/{name}")
     public String gifDetails(@PathVariable String name, ModelMap modelMap){
 
-        Gif gif = gifRepository.findByName(name);
+        Gif gif = new Gif();
         modelMap.put("gif", gif);
         return "gif-details";
     }
 
-    public GifRepository getGifRepository() {
-        return gifRepository;
-    }
-
-    public void setGifRepository(GifRepository gifRepository) {
-        this.gifRepository = gifRepository;
-    }
 }

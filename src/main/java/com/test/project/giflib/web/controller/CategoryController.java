@@ -1,15 +1,15 @@
 package com.test.project.giflib.web.controller;
 
-import com.test.project.giflib.data.CategoryRepository;
-import com.test.project.giflib.data.GifRepository;
 import com.test.project.giflib.model.Category;
 import com.test.project.giflib.model.Gif;
+import com.test.project.giflib.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,43 +19,30 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
 
-    @Autowired
-    private GifRepository gifRepository;
-
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/categories")
     public String listCategories(ModelMap modelMap){
-        List<Category> list = categoryRepository.getAllCategories();
-        modelMap.put("categories", list);
+
+        List<Category> categories = categoryService.findAll();
+
+        modelMap.put("categories", categories);
         return "categories";
     }
 
     @RequestMapping("/categories/{id}")
     public String getCategory(@PathVariable int id, ModelMap modelMap){
-        Category category = categoryRepository.findById(id);
+        Category category = new Category();
         modelMap.put("category", category);
 
-        List<Gif> list = gifRepository.findByCategoryId(id);
+        List<Gif> list = new ArrayList<>();
         modelMap.put("gifs", list);
 
 
         return "category";
     }
 
-    public CategoryRepository getCategoryRepository() {
-        return categoryRepository;
-    }
 
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
 
-    public GifRepository getGifRepository() {
-        return gifRepository;
-    }
-
-    public void setGifRepository(GifRepository gifRepository) {
-        this.gifRepository = gifRepository;
-    }
 }
