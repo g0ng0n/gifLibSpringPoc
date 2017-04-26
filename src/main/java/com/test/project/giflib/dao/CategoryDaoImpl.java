@@ -1,6 +1,6 @@
 package com.test.project.giflib.dao;
 
-import com.test.project.giflib.model.Category
+import com.test.project.giflib.model.Category;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,18 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public void save(Category category) {
+        //Open session
+        Session session = sessionFactory.openSession();
 
+        // Begin trasanction
+        session.beginTransaction();
+        // save the cat
+        session.save(category);
+
+        // commit the transaction
+        session.getTransaction().commit();
+        // close session
+        session.close();
     }
 
     @Override
