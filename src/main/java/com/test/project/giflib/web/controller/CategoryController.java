@@ -136,10 +136,25 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/categories/{categoryId}/delete", method = RequestMethod.DELETE )
-    public String deleteCategory(@PathVariable Long categoryId){
-        // TODO: Delete Category if it contains no GIFs
+    public String deleteCategory(@PathVariable Long categoryId, BindingResult result, RedirectAttributes redirectAttributes){
 
-        // TODO: Redirect browser to /categories
+
+        Category cat = categoryService.findById(categoryId);
+
+        // Delete Category if it contains no GIFs
+        if(cat.getGifs().size() > 0 ){
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("Only Empty Ctegories can be deleted", FlashMessage.Status.FAILURE));
+
+            return String.format("redirect:/categories/%s/edit", categoryId);
+        }
+
+        categoryService.delete(cat);
+        redirectAttributes.addFlashAttribute("flash",
+                new FlashMessage("Category Deleted", FlashMessage.Status.SUCCESS));
+
+
+        // Redirect browser to /categories
 
         return "redirect:/categories";
     }

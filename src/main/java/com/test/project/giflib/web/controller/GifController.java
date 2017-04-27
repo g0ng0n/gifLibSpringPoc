@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +31,10 @@ public class GifController {
 
     @RequestMapping(value = "/")
     public String listGifs(ModelMap modelMap){
-        List<Gif> list = new ArrayList<>();
+        List<Gif> list = gifService.findAll();
+
         modelMap.put("gifs", list);
-        return "home";
+        return "gif/index";
     }
 
     // URL => Http://localhost:8080/gif/android-explosion
@@ -55,6 +57,16 @@ public class GifController {
         return gifService.findById(gifId).getBytes();
     }
 
+    @RequestMapping(value = "/gifs/{gifId}/favorite", method = RequestMethod.POST)
+    public String toggleFavorite(@PathVariable Long gifId, HttpServletRequest request){
+
+        Gif gif = gifService.findById(gifId);
+
+        gifService.toggleFavorite(gif);
+
+        return String.format("redirect:%s", request.getHeader("referer"));
+    }
+
     @RequestMapping(value = "/gifs", method = RequestMethod.POST)
     public String addGif(Gif gif, @RequestParam MultipartFile file, RedirectAttributes redirectAttributes){
         // TODO: Upload new GIF if data is valid
@@ -69,9 +81,13 @@ public class GifController {
 
     @RequestMapping("/upload")
     public String formNewGif(Model model){
-
-        model.addAttribute("gif", new Gif());
+        if (!model.containsAttribute("gif")){
+            model.addAttribute("gif", new Gif());
+        }
         model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("action", "/gifs");
+        model.addAttribute("heading", "Upload");
+        model.addAttribute("submit", "Add");
 
         return "gif/form";
     }
